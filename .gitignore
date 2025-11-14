@@ -40,12 +40,6 @@ wheels/
 *.swo
 *~
 
-# Fichiers de résultats/figures (si générés)
-figures/
-*.png
-*.jpg
-*.jpeg
-
 # Fichiers système
 .DS_Store
 Thumbs.db
