@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from stl import mesh
+import trimesh
 from geometry import *
 
 # TD2 : Calcul et affichage de l'éclairement des triangles
@@ -66,34 +66,14 @@ plt.show()
 # 4. Afficher le bâtiment éclairé avec affichage_objet_eclaire
 
 # ECRIRE LE TEST ICI
-stl_mesh = mesh.Mesh.from_file('building.stl')
+stl_mesh = trimesh.load('building.stl')
 
-# Extraire les sommets et triangles (déduplication des vertices)
-vertices = []
-triangles = []
-vertex_dict = {}
-vertex_index = 0
-
-for i in range(len(stl_mesh.vectors)):
-    triangle_indices = []
-    for vertex in stl_mesh.vectors[i]:
-        vertex_tuple = tuple(vertex)
-        if vertex_tuple not in vertex_dict:
-            vertex_dict[vertex_tuple] = vertex_index
-            vertices.append(vertex)
-            vertex_index += 1
-        triangle_indices.append(vertex_dict[vertex_tuple])
-    triangles.append(triangle_indices)
-
-sommets = np.array(vertices)
-triangles = np.array(triangles)
-
-pmax = np.max(sommets, axis=0)
+pmax = np.max(stl_mesh.vertices, axis=0)
 source = pmax * 3
 source[1] = -source[1]
-E = calcul_eclairement_objet_simple(sommets, triangles, source)
+E = calcul_eclairement_objet_simple(stl_mesh.vertices, stl_mesh.faces, source)
 fig, ax = figure()
-affichage_objet_eclaire(sommets, triangles, E, source, ax)
+affichage_objet_eclaire(stl_mesh.vertices, stl_mesh.faces, E, source, ax)
 plt.show()
 
 
@@ -108,5 +88,5 @@ plt.show()
 #        visibles quelle que soit la taille de l'objet.
 
 fig, ax = figure()
-affichage_objet(sommets, triangles, ax)
+affichage_objet(stl_mesh.vertices, stl_mesh.faces, ax)
 plt.show()
